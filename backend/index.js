@@ -1,0 +1,25 @@
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+const app = express();
+
+// dummy get request
+// app.get("/home", (req, res) => {
+//   return res.status(200).json({
+//     message: "I am coming from backend",
+//     succes: true,
+//   });
+// });
+// middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+const corsOptions = {
+  origin: "http//localhost:5173",
+  credentials: true,
+};
+app.use(cors(corsOptions));
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server running at port ${PORT}`);
+});
