@@ -8,37 +8,62 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const [input, setInput] = useState({
-    fullname: "",
     email: "",
-    phoneNumber: "",
     password: "",
     role: "",
-    file: "",
   });
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
-  const changeFileHandler = (e) => {
-    setInput({ ...input, file: e.target.files?.[0] });
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        navigate("/");
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
   return (
     <div>
       <Navbar />
       <div className="flex items-center justify-center max-w-7xl mx-auto">
         <form
-          action=""
+          onSubmit={submitHandler}
           className="w-1/2 border border-gray-200 rounded-md p-4 my-10"
         >
           <h1 className="font-bold text-xl mb-5">Login</h1>
 
           <div className="my-2">
             <Label>Email</Label>
-            <Input type="text" placeholder="Tushar@gmail.com" />
+            <Input
+              type="email"
+              value={input.email}
+              name="email"
+              onChange={changeEventHandler}
+              placeholder="Tushar@gmail.com"
+            />
           </div>
 
           <div className="my-2">
             <Label>Password</Label>
-            <Input type="password" placeholder="Password" />
+            <Input
+              type="password"
+              value={input.password}
+              name="password"
+              onChange={changeEventHandler}
+              placeholder="Password"
+            />
           </div>
           <div className="flex items-center justify-between">
             <RadioGroup className="flex items-center gap-4 my-5">
@@ -47,6 +72,8 @@ const Login = () => {
                   type="radio"
                   name="role"
                   value="student"
+                  checked={input.role === "student"}
+                  onChange={changeEventHandler}
                   className="cursor-pointer"
                 />
                 <Label htmlFor="r2">Student</Label>
@@ -56,6 +83,8 @@ const Login = () => {
                   type="radio"
                   name="role"
                   value="recruiter"
+                  checked={input.role === "recruiter"}
+                  onChange={changeEventHandler}
                   className="cursor-pointer"
                 />
                 <Label htmlFor="r2">Recruiter</Label>
