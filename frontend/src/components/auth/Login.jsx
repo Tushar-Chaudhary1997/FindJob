@@ -116,7 +116,7 @@ const Login = () => {
           <span className="text-sm">
             Don't have an account?
             <Link to="/signup" className="text-blue-600">
-              Login
+              Signup
             </Link>
           </span>
         </form>
