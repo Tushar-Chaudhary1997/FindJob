@@ -1,23 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { JOB_API_END_POINT } from "@/utils/constant";
+import { setSingleJob } from "@/redux/jobSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const JobDescription = () => {
-  const isApplied = false;
+  const isApplied = true;
+  const params = useParams();
+  const jobId = params.id;
+  const { singleJob } = useSelector((store) => store.job);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchSingleJob = async () => {
+      try {
+        const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
+          withCredentials: true,
+        });
+        if (res.data.success) {
+          dispatch(setSingleJob(res.data.jobs));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSingleJob();
+  }, [jobId, dispatch, user?._id]);
   return (
     <div className="max-w-7xl mx-auto my-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-bold text-xl">Frontend Developer</h1>
+          <h1 className="font-bold text-xl">{singleJob?.title}</h1>
           <div className="flex items-center gap-2 mt-4">
             <Badge className="text-blue-700 font-bold" variant="ghost">
-              12 Positions
+              {singleJob?.position} Positions
             </Badge>
             <Badge className="text-[#F83002] font-bold" variant="ghost">
-              Part Time
+              {singleJob?.jobType}
             </Badge>
             <Badge className="text-[#7209b7] font-bold" variant="ghost">
-              24LPA
+              {singleJob?.salary}LPA
             </Badge>
           </div>
         </div>
@@ -39,7 +64,7 @@ const JobDescription = () => {
         <h1 className="font-bold my-1">
           Role:
           <span className="pl-4 font-normal text-gray-800">
-            Frontend Developer
+            {singleJob?.title}
           </span>
         </h1>
         <h1 className="font-bold my-1">
