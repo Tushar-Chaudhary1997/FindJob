@@ -8,10 +8,11 @@ import { setSingleJob } from "@/redux/jobSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const JobDescription = () => {
-  const isApplied = true;
+  const isApplied = false;
   const params = useParams();
   const jobId = params.id;
   const { singleJob } = useSelector((store) => store.job);
+  const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,8 +21,9 @@ const JobDescription = () => {
         const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
           withCredentials: true,
         });
+        console.log(res);
         if (res.data.success) {
-          dispatch(setSingleJob(res.data.jobs));
+          dispatch(setSingleJob(res.data.job));
         }
       } catch (error) {
         console.log(error);
@@ -70,31 +72,31 @@ const JobDescription = () => {
         <h1 className="font-bold my-1">
           Location:
           <span className="pl-4 font-normal text-gray-800">
-            Frontend Developer
+            {singleJob?.location}
           </span>
         </h1>
         <h1 className="font-bold my-1">
           Description:
           <span className="pl-4 font-normal text-gray-800">
-            Frontend Developer
+            {singleJob?.description}
           </span>
         </h1>
         <h1 className="font-bold my-1">
           Experience:
           <span className="pl-4 font-normal text-gray-800">
-            Frontend Developer
+            {singleJob?.experience}
           </span>
         </h1>
         <h1 className="font-bold my-1">
           Salary:
           <span className="pl-4 font-normal text-gray-800">
-            Frontend Developer
+            {singleJob?.salary}LPA
           </span>
         </h1>
         <h1 className="font-bold my-1">
           Total Applicants:
           <span className="pl-4 font-normal text-gray-800">
-            Frontend Developer
+            {singleJob?.applications?.length}
           </span>
         </h1>
         <h1 className="font-bold my-1">
