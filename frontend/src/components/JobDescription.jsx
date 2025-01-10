@@ -127,7 +127,9 @@ const JobDescription = () => {
         <h1 className="font-bold my-1">
           Total Applicants:
           <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.applications?.length}
+            {singleJob?.application?.length > 0
+              ? singleJob.application.length
+              : 0}
           </span>
         </h1>
         <h1 className="font-bold my-1">
